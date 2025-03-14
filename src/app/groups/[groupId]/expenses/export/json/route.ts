@@ -1,4 +1,4 @@
-import { getPrisma } from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 import contentDisposition from 'content-disposition'
 import { NextResponse } from 'next/server'
 
@@ -6,7 +6,6 @@ export async function GET(
   req: Request,
   { params: { groupId } }: { params: { groupId: string } },
 ) {
-  const prisma = await getPrisma()
   const group = await prisma.group.findUnique({
     where: { id: groupId },
     select: {
@@ -32,7 +31,7 @@ export async function GET(
     return NextResponse.json({ error: 'Invalid group ID' }, { status: 404 })
 
   const date = new Date().toISOString().split('T')[0]
-  const filename = `Spliit Export - ${group.name} - ${date}`
+  const filename = `Spliit Export - ${date}`
   return NextResponse.json(group, {
     headers: {
       'content-type': 'application/json',
